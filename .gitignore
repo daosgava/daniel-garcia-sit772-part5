@@ -1,0 +1,16 @@
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+
+# Ignore Terraform cache files
+.terraform/
+
+# Ignore any plan files
+*.tfplan
+
+# Ignore sensitive or temporary files
+*.secret
+
+secrets.yaml
+
+.DS_Store
