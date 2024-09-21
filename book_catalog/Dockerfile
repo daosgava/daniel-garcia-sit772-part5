@@ -1,20 +1,18 @@
-# Pull the official base image
-FROM python:3.9-slim
+# Pull the base image.
+ARG PYTHON_VERSION=3.12.5
+FROM python:${PYTHON_VERSION}-slim as base
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /app/book_catalog
 
-# Copy the requirements file into the container
-COPY requirements.txt .
+# Copy files from the local file system into the container
+COPY . .
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application code to the container
-COPY . .
-
-# Expose the port the app runs on
+# Expose the port that the application listens on
 EXPOSE 8000
 
-# Command to run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run the application
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port=8000"]

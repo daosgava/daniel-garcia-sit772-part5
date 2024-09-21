@@ -8,7 +8,7 @@ services:
     ports:
       - "8001:8000"
     environment:
-      - DATABASE_URL=postgresql://deakin_library_722_user:UlunAR56RZfjyTK0G873zz4uJ5ggnrDp@dpg-crimtk3v2p9s738krkog-a.oregon-postgres.render.com/deakin_library_722
+      - DATABASE_URL=postgresql://deakin_libray_user:JlVIo0PD52bS3x5D0f45tq4mhAsR53XN@dpg-crn961e8ii6s73empe6g-a.oregon-postgres.render.com/deakin_libray
 
   inventory_management:
     image: inventory-management:1
@@ -17,4 +17,4 @@ services:
     ports:
       - "8002:8000"
     environment:
-      - DATABASE_URL=postgresql://deakin_library_722_user:UlunAR56RZfjyTK0G873zz4uJ5ggnrDp@dpg-crimtk3v2p9s738krkog-a.oregon-postgres.render.com/deakin_library_722
+      - DATABASE_URL=postgresql://deakin_libray_user:JlVIo0PD52bS3x5D0f45tq4mhAsR53XN@dpg-crn961e8ii6s73empe6g-a.oregon-postgres.render.com/deakin_libray

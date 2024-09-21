@@ -2,16 +2,13 @@
 FROM python:3.9-slim
 
 # Set the working directory inside the container
-WORKDIR /app
+WORKDIR /app/inventory_management
 
-# Copy the requirements file into the container
-COPY requirements.txt .
+# Copy files from the local file system into the container
+COPY . .
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the application code to the container
-COPY . .
 
 # Expose the port the app runs on
 EXPOSE 8000
