@@ -8,7 +8,7 @@ services:
     ports:
       - "8001:8000"
     environment:
-      - DATABASE_URL=xxx
+      - DATABASE_URL=${DATABASE_URL}
 
   inventory_management:
     image: inventory-management:1
@@ -17,4 +17,4 @@ services:
     ports:
       - "8002:8000"
     environment:
-      - DATABASE_URL=xxx
+      - DATABASE_URL=${DATABASE_URL}
