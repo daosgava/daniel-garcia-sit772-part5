@@ -1,9 +1,6 @@
 # 
 # GitHub Actions workflow.
 #
-# Automatically deploys the Node.js microservice to Kubernetes on push to the main branch.
-# For real use you might want to restrict this to the "prod" branch.
-#
 
 name: Deploy Inventory Management
 
@@ -53,14 +50,8 @@ jobs:
         run: ./scripts/push-image.sh
 
       #
-      # Installs Kubectl and connects it to the cluster.
+      # Sets up the kubeconfig file.
       #
-      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
-      #
-      # - uses: tale/kubectl-action@v1
-      #   with:
-      #     base64-kube-config: ${{ secrets.KUBE_CONFIG }}
-      #     kubectl-version: v1.24.2
       - name: Setup kubeconfig
         run: |
           mkdir -p ~/.kube
