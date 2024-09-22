@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: inventory-management
-          image: deakinlibrary.azurecr.io/inventory-management-server:latest
+          image: $CONTAINER_REGISTRY/inventory-management:$VERSION
           imagePullPolicy: Always
           ports:
             - containerPort: 8000

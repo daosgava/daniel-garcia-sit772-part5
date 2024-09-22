@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: book-catalog
-          image: deakinlibrary.azurecr.io/book-catalog-server:latest
+          image: $CONTAINER_REGISTRY/book-catalog:$VERSION
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
