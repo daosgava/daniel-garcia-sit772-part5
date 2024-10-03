@@ -39,6 +39,11 @@ jobs:
         run: terraform init
         working-directory: ./infrastructure
 
+      - name: Import Existing Resource Group
+        run: terraform import azurerm_resource_group.deakin_library /subscriptions/382d76a3-f693-49a1-9777-fe5329168fe1/resourceGroups/deakinlibrary
+        continue-on-error: true
+        working-directory: ./infrastructure
+
       - name: Terraform Plan
         run: terraform plan
         working-directory: ./infrastructure
