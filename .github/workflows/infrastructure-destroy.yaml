@@ -1,0 +1,52 @@
+name: Destroy Infrastructure
+
+on:
+  #
+  # Allows deployment to be invoked manually through the GitHub Actions user interface.
+  #
+  workflow_dispatch: 
+
+jobs:
+  terraform:
+    name: Terraform Plan and Apply
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.5
+
+      - name: Login to Azure
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./infrastructure
+
+      # Import the existing resource group. Temporary workaround until a remote state is implemented.
+      - name: Import Existing Resource Group
+        run: terraform import azurerm_resource_group.deakin_library /subscriptions/382d76a3-f693-49a1-9777-fe5329168fe1/resourceGroups/deakinlibrary
+        continue-on-error: true
+        working-directory: ./infrastructure
+
+      # Import the existing container registry. Temporary workaround until a remote state is implemented.
+      - name: Import Existing Container Registry
+        run: terraform import azurerm_container_registry.container_registry /subscriptions/382d76a3-f693-49a1-9777-fe5329168fe1/resourceGroups/deakinlibrary/providers/Microsoft.ContainerRegistry/registries/deakinlibrary
+        continue-on-error: true
+        working-directory: ./infrastructure
+
+      # Import the existing Kubernetes cluster. Temporary workaround until a remote state is implemented.
+      - name: Import Existing Kubernetes Cluster
+        run: terraform import azurerm_kubernetes_cluster.cluster /subscriptions/382d76a3-f693-49a1-9777-fe5329168fe1/resourceGroups/deakinlibrary/providers/Microsoft.ContainerService/managedClusters/deakinlibrary
+        continue-on-error: true
+        working-directory: ./infrastructure
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve
+        working-directory: ./infrastructure

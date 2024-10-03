@@ -7,8 +7,16 @@ terraform {
   }
 
   required_version = ">= 1.5.6"
+
+  backend "azurerm" {
+    resource_group_name   = "deakinlibrary"
+    storage_account_name  = "terraformstatedaosgava"
+    container_name        = "tfstate"
+    key                   = "terraform.tfstate"
+  }
 }
 
+# This block is required to prevent provider registration errors
 provider "azurerm" {
   features {}
   skip_provider_registration = true

@@ -1,18 +1,11 @@
 name: Deploy Infrastructure
 
 on:
-  #
-  # Deploy the microservice on push to any branch of this code repository.
-  #
   push: 
     branches:
       - main
     paths:
-      - ./infrastructure/**
-
-  #
-  # Allows deployment to be invoked manually through the GitHub Actions user interface.
-  #
+      - infrastructure/**
   workflow_dispatch: 
 
 jobs:
@@ -20,34 +13,44 @@ jobs:
     name: Terraform Plan and Apply
     runs-on: ubuntu-latest
 
+    env:
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Login to Azure using the credentials
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: 1.9.5
 
-      - name: Login to Azure
-        uses: Azure/login@v1
-        with:
-          creds: '{"clientId": "${{ secrets.AZURE_CLIENT_ID }}", "clientSecret": "${{ secrets.AZURE_CLIENT_SECRET }}", "tenantId": "${{ secrets.AZURE_TENANT_ID }}", "subscriptionId": "${{ secrets.AZURE_SUBSCRIPTION_ID }}"}'
-
-
       - name: Terraform Init
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=deakinlibrary" \
+            -backend-config="storage_account_name=terraformstatedaosgava" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=terraform.tfstate"
         working-directory: ./infrastructure
 
-      - name: Import Existing Resource Group
-        run: terraform import azurerm_resource_group.deakin_library /subscriptions/382d76a3-f693-49a1-9777-fe5329168fe1/resourceGroups/deakinlibrary
-        continue-on-error: true
+      - name: Unlock Terraform State
+        run: terraform force-unlock -force 78e88cd5-a410-6604-8c0e-5dd5632517a5
         working-directory: ./infrastructure
+        continue-on-error: true
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -input=false
         working-directory: ./infrastructure
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve -input=false
         working-directory: ./infrastructure
