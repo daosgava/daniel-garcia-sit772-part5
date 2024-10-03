@@ -1,4 +1,4 @@
-name: Deploy Microservices via Terraform
+name: Infrastructure
 
 on:
   #
@@ -29,9 +29,12 @@ jobs:
         with:
           terraform_version: 1.9.5
 
-      - name: Azure Login
-        run: |
-          az login --username ${{ secrets.AZURE_USERNAME }} --password ${{ secrets.AZURE_PASSWORD }}
+      - name: Login to Azure
+        uses: Azure/login@v1
+        with:
+          clientId: ${{ secrets.AZURE_CLIENT_ID }}
+          clientSecret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenantId: ${{ secrets.AZURE_TENANT_ID }}
 
       - name: Terraform Init
         run: terraform init
